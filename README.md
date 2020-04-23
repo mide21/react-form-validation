@@ -1,4 +1,4 @@
-# Form-validation
+# react-form-validation
 
 A simple form-validation app built with reactJS, I created a sign up form and validate that the data entered into the form field is valid before submission of the form
 
