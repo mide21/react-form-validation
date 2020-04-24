@@ -4,7 +4,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 17px;
-  background-color: #9999cc;
 }
 
 h1 {
@@ -22,6 +21,7 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: #9999cc;
 }
 
 .form-wrapper {
@@ -32,6 +32,8 @@ h1 {
   border-radius: 10px;
   box-shadow: 0px 10px 50px #555;
   background-color: #f1f1f1;
+  position:relative;
+  z-index:1100;
 }
 
 form {
@@ -126,7 +128,15 @@ input.error {
 }
 
 .alert {
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   width: 500px;
   text-align: center;
+
+}
+
+.icon {
+  position: absolute;
+  bottom: 135px;
+  right: 55px;
+  cursor:pointer;
 }
