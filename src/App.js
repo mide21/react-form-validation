@@ -1,6 +1,9 @@
 import React from 'react';
 import SuccessAlert from './components/success-alert';
 import ErrorAlert from './components/error-alert';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye } from '@fortawesome/free-solid-svg-icons'
+import { faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import './index.css';
 
 const formValid = ({ formErrors, ...rest }) => {
@@ -26,6 +29,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
+      isPasswordShow: false,
       alert_message: "",
       firstName: null,
       lastName: null,
@@ -39,6 +43,11 @@ class App extends React.Component {
       }
     };
   }
+
+  togglePasswordVisiblity = () => {
+    const { isPasswordShown } = this.state;
+    this.setState({ isPasswordShown: !isPasswordShown });
+  };
 
   handleSubmit = e => {
     e.preventDefault();
@@ -84,10 +93,10 @@ class App extends React.Component {
 
   render() {
     const { formErrors } = this.state;
+    const { isPasswordShown } = this.state;
     return (
       <div className="wrapper">
         <hr />
-
         {this.state.alert_message === "success" ? <SuccessAlert /> : null}
         {this.state.alert_message === "error" ? <ErrorAlert /> : null}
 
@@ -141,11 +150,14 @@ class App extends React.Component {
               <input
                 className={formErrors.password.length > 0 ? "error" : null}
                 placeholder="Password"
-                type="password"
+                type={isPasswordShown ? "text" : "password"}
                 name="password"
                 onChange={this.handleChange}
                 noValidate
               />
+                <span onClick={this.togglePasswordVisiblity}>
+                {isPasswordShown ? <FontAwesomeIcon icon={faEye} className="icon" /> : <FontAwesomeIcon icon={faEyeSlash} className="icon" />}
+                </span>
               {formErrors.password.length > 0 && (
                 <span className="errorMessage">{formErrors.password}</span>
               )}
