@@ -121,6 +121,13 @@ input.error {
   border: 2px solid #0000ff;
 }
 
+.createAccount button:disabled {
+  color: #fff;
+  background-color: #0000ff;
+  border:none; 
+  opacity: 0.5;
+}
+
 .createAccount small {
   color: #999;
   font-weight: lighter;

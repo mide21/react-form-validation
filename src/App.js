@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye } from '@fortawesome/free-solid-svg-icons'
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import './index.css';
+import axios from 'axios';
 
 const formValid = ({ formErrors, ...rest }) => {
   let valid = true
@@ -29,6 +30,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
+      loading: false,
       isPasswordShow: false,
       alert_message: "",
       firstName: null,
@@ -52,12 +54,42 @@ class App extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    if (formValid(this.state)) {
-      this.setState({ alert_message: "success" });
-    } else {
-      this.setState({ alert_message: "error" });
-    }
+    const { firstName, lastName, email, password } = this.state;
+
+    axios
+      .post(
+        "https://jsonplaceholder.typicode.com/posts",
+        {
+          user: {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: password
+          }
+        }
+      )
+      .then(response => {
+        console.log(response)
+        if (formValid(this.state)) {
+          this.setState({ alert_message: "success", loading: false });
+        } else {
+          this.setState({ alert_message: "error", loading: false });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        alert(error);
+        this.setState({
+          loading: false
+        });
+      });
   };
+
+  onLoad = () => {
+    this.setState({
+      loading: true
+    })
+  }
 
   handleChange = e => {
     e.preventDefault();
@@ -79,7 +111,7 @@ class App extends React.Component {
         break;
       case "password":
         formErrors.password =
-          value.length < 3 ? "minimum of 8 characters required" : ""
+          value.length < 8 ? "minimum of 8 characters required" : ""
         break;
       default:
         break;
@@ -92,13 +124,12 @@ class App extends React.Component {
   }
 
   render() {
-    const { formErrors } = this.state;
-    const { isPasswordShown } = this.state;
+    const { formErrors, isPasswordShown, loading, alert_message } = this.state;
     return (
       <div className="wrapper">
         <hr />
-        {this.state.alert_message === "success" ? <SuccessAlert /> : null}
-        {this.state.alert_message === "error" ? <ErrorAlert /> : null}
+        {alert_message === "success" ? <SuccessAlert /> : null}
+        {alert_message === "error" ? <ErrorAlert /> : null}
 
         <div className="form-wrapper">
           <h1>Create Account</h1>
@@ -155,15 +186,19 @@ class App extends React.Component {
                 onChange={this.handleChange}
                 noValidate
               />
-                <span onClick={this.togglePasswordVisiblity}>
+              <span onClick={this.togglePasswordVisiblity}>
                 {isPasswordShown ? <FontAwesomeIcon icon={faEye} className="icon" /> : <FontAwesomeIcon icon={faEyeSlash} className="icon" />}
-                </span>
+              </span>
               {formErrors.password.length > 0 && (
                 <span className="errorMessage">{formErrors.password}</span>
               )}
             </div>
             <div className="createAccount">
-              <button type="submit">Submit</button>
+              <button type="submit" onClick={this.onLoad} disabled={loading}>
+                { loading && <i className="fa fa-refresh fa-spin" style={{ marginRight: "7px" }} /> }
+                { loading && <span>Submitting...</span> }
+                { !loading && <span>Submit</span> }
+              </button>
               <small>Already have an account</small>
             </div>
           </form>
